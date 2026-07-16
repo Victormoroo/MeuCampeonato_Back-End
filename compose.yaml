@@ -1,0 +1,42 @@
+services:
+  # Aplicação Laravel (PHP 8.4 + Composer + Python 3).
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    # Publica a API em http://localhost:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      # Bind mount do código-fonte para desenvolvimento local.
+      - .:/var/www/html
+      # Volume nomeado para as dependências do Composer (sobrepõe ./vendor).
+      - vendor:/var/www/html/vendor
+    # Só inicia depois que o MySQL estiver saudável (healthcheck).
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # Banco de dados MySQL 8.4.
+  mysql:
+    image: mysql:8.4.10
+    environment:
+      MYSQL_DATABASE: meu_campeonato
+      MYSQL_USER: meu_campeonato
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      # Volume nomeado para persistência dos dados do banco.
+      - mysql-data:/var/lib/mysql
+    # Healthcheck com mysqladmin ping, usando credenciais disponíveis no contêiner.
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -u root --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    # A porta 3306 NÃO é publicada no host: somente o serviço app acessa o banco.
+
+volumes:
+  mysql-data:
+  vendor:

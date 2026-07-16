@@ -1,0 +1,42 @@
+# Controle de versão
+.git
+.gitattributes
+.gitignore
+
+# Ambiente / segredos locais (mantém .env.example no contexto de build)
+.env
+.env.backup
+.env.production
+
+# Dependências instaladas (fornecidas por volume nomeado / instaladas no build)
+/vendor
+/node_modules
+
+# Artefatos de build de front-end
+/public/build
+/public/hot
+/public/storage
+
+# Logs
+*.log
+
+# Dados locais de banco (SQLite de desenvolvimento)
+/database/*.sqlite
+/database/*.sqlite-journal
+
+# Caches de teste do PHPUnit
+.phpunit.result.cache
+/.phpunit.cache
+
+# Artefatos de IDE / sistema operacional
+.DS_Store
+Thumbs.db
+/.idea
+/.vscode
+/.zed
+/.nova
+/.fleet
+
+# Arquivos de infraestrutura Docker desnecessários dentro da imagem
+compose.yaml
+.dockerignore
