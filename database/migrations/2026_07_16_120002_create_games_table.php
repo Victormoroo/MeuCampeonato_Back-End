@@ -33,7 +33,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['championship_id', 'stage', 'sequence']);
-            $table->index(['championship_id', 'stage']);
         });
     }
 
