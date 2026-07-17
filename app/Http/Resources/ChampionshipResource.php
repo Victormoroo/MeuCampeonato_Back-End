@@ -24,7 +24,10 @@ class ChampionshipResource extends JsonResource
             'completed_at' => $this->completed_at?->toIso8601String(),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
+            'teams_count' => $this->whenCounted('teams'),
+            'games_count' => $this->whenCounted('games'),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
+            'games' => GameResource::collection($this->whenLoaded('games')),
         ];
     }
 }

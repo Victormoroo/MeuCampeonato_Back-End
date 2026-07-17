@@ -3,4 +3,5 @@
 use App\Http\Controllers\Api\ChampionshipController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/championships', [ChampionshipController::class, 'store']);
+Route::apiResource('championships', ChampionshipController::class)
+    ->only(['index', 'store', 'show']);
