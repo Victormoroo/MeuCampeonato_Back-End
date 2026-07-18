@@ -3,6 +3,7 @@
 namespace App\Actions\Championships;
 
 use App\Contracts\ScoreGenerator;
+use App\Domain\Championship\GameScore;
 use App\Domain\Championship\GameWinnerResolver;
 use App\Domain\Championship\TeamPointsCalculator;
 use App\Exceptions\GameAlreadyPlayedException;
@@ -32,6 +33,30 @@ class PlayGame
         // alterado ainda e a ScoreGenerationException apenas propaga.
         $score = $this->scoreGenerator->generate();
 
+        return $this->play($game, $score);
+    }
+
+    /**
+     * Dispute uma partida com um placar já gerado (não chama o ScoreGenerator).
+     * Útil quando os placares foram pré-gerados fora da transação geral, como na
+     * simulação completa do campeonato.
+     */
+    public function handleWithScore(Game $game, GameScore $score): Game
+    {
+        if ($game->played_at !== null) {
+            throw GameAlreadyPlayedException::forGame($game);
+        }
+
+        return $this->play($game, $score);
+    }
+
+    /**
+     * Fluxo compartilhado: valida, bloqueia, calcula, resolve o vencedor e
+     * persiste tudo atomicamente. A DB::transaction interna funciona como
+     * savepoint quando chamada dentro de uma transação maior.
+     */
+    private function play(Game $game, GameScore $score): Game
+    {
         return DB::transaction(function () use ($game, $score): Game {
             $game = Game::query()
                 ->whereKey($game->getKey())
