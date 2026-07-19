@@ -50,10 +50,10 @@ contêineres.
 
 ## Instalação e execução
 
-Fluxo para um clone novo (substitua `<URL_DO_REPOSITORIO>` pela URL real do repositório):
+Fluxo para um clone novo:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/Victormoroo/MeuCampeonato_Back-End.git
 cd MeuCampeonato_Back-End
 cp .env.example .env
 docker compose up -d --build
