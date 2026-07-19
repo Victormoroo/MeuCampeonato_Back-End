@@ -1,0 +1,186 @@
+{
+    "info": {
+        "name": "Meu Campeonato API",
+        "description": "Fluxo da API do Meu Campeonato: criar, simular, consultar e listar campeonatos.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000"
+        },
+        {
+            "key": "championship_id",
+            "value": "1"
+        }
+    ],
+    "item": [
+        {
+            "name": "Campeonatos",
+            "item": [
+                {
+                    "name": "Criar campeonato",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('status 201', function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "var body = pm.response.json();",
+                                    "",
+                                    "pm.test('contem data.id', function () {",
+                                    "    pm.expect(body).to.have.nested.property('data.id');",
+                                    "});",
+                                    "",
+                                    "if (body && body.data && body.data.id) {",
+                                    "    pm.collectionVariables.set('championship_id', body.data.id);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Copa do Bairro\",\n    \"teams\": [\"Águias\", \"Tigres\", \"Leões\", \"Panteras\", \"Falcões\", \"Lobos\", \"Dragões\", \"Tubarões\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/championships",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "championships"]
+                        }
+                    }
+                },
+                {
+                    "name": "Simular campeonato",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('status 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "var body = pm.response.json();",
+                                    "",
+                                    "pm.test('status completed', function () {",
+                                    "    pm.expect(body.data.status).to.eql('completed');",
+                                    "});",
+                                    "",
+                                    "pm.test('8 partidas', function () {",
+                                    "    pm.expect(body.data.games).to.have.lengthOf(8);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/championships/{{championship_id}}/simulate",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "championships", "{{championship_id}}", "simulate"]
+                        }
+                    }
+                },
+                {
+                    "name": "Consultar campeonato",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('status 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "var body = pm.response.json();",
+                                    "",
+                                    "pm.test('contem data.id', function () {",
+                                    "    pm.expect(body).to.have.nested.property('data.id');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/championships/{{championship_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "championships", "{{championship_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar campeonatos",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('status 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "var body = pm.response.json();",
+                                    "",
+                                    "pm.test('paginacao data, links e meta', function () {",
+                                    "    pm.expect(body).to.have.property('data');",
+                                    "    pm.expect(body).to.have.property('links');",
+                                    "    pm.expect(body).to.have.property('meta');",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/championships",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "championships"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
