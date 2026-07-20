@@ -135,18 +135,20 @@ Não há prorrogação, pênaltis nem empate final: toda partida sempre define v
 | `POST` | `/api/championships` | Cadastra um campeonato com 8 times | `201`, `422` |
 | `POST` | `/api/championships/{championship}/simulate` | Simula o campeonato completo | `200`, `404`, `409`, `502` |
 | `GET` | `/api/championships/{championship}` | Detalhe/histórico de um campeonato | `200`, `404` |
+| `DELETE` | `/api/championships/{championship}` | Remove um campeonato (e, em cascata, seus times e jogos) | `204`, `404` |
 | `GET` | `/api/championships` | Lista paginada de campeonatos | `200` |
 
 Significado dos códigos:
 
 - **201** — campeonato criado.
+- **204** — campeonato removido (resposta sem corpo).
 - **200** — consultas e simulação bem-sucedidas.
 - **422** — falha de validação no cadastro (ex.: != 8 times, nomes duplicados, nome vazio).
 - **404** — campeonato inexistente.
 - **409** — campeonato não pode ser simulado (não está `pending`, não tem 8 times, ou já tem partidas).
 - **502** — o gerador externo de placar (Python) falhou.
 
-Não existem endpoints de atualização ou remoção.
+Não existe endpoint de atualização (`PUT`/`PATCH`).
 
 ## Exemplos (curl)
 
@@ -284,7 +286,7 @@ Como usar:
 
 1. No Postman, **Import** → selecione o arquivo acima.
 2. A collection já traz a variável **`base_url`** com o valor padrão **`http://localhost:8000`**.
-3. Execute as requisições na ordem: **Criar campeonato → Simular → Consultar → Listar**.
+3. Execute as requisições na ordem: **Criar campeonato → Simular → Consultar → Listar → Deletar**.
 
 A requisição **Criar campeonato** salva automaticamente o `id` retornado na variável de collection
 **`championship_id`**, permitindo executar **Simular** e **Consultar** sem editar nada manualmente.

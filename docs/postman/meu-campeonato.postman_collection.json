@@ -179,6 +179,36 @@
                             "path": ["api", "championships"]
                         }
                     }
+                },
+                {
+                    "name": "Deletar campeonato",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('status 204', function () {",
+                                    "    pm.response.to.have.status(204);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/championships/{{championship_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "championships", "{{championship_id}}"]
+                        }
+                    }
                 }
             ]
         }
