@@ -212,7 +212,9 @@ Resposta (resumida):
 ## Estrutura da resposta
 
 - Toda resposta de recurso usa o **envelope `data`**.
-- A **listagem** é paginada, com `data`, `links` e `meta`.
+- A **listagem** é paginada, com `data`, `links` e `meta`. Cada item traz `teams_count`, `games_count`
+  e **`champion`** — o nome do time campeão (`final_position = 1`), ou `null` se o campeonato ainda não
+  foi concluído.
 - No **detalhe**, os `teams` vêm **ordenados por `registration_order`** e os `games` **ordenados por
   `id`**.
 - Em cada partida, **`home_team`** e **`away_team`** representam os participantes; **`winner`** e
