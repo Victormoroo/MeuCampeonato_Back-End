@@ -128,6 +128,42 @@ class ListChampionshipsTest extends TestCase
         $this->assertContains('completed', $statuses);
     }
 
+    public function test_it_includes_the_champion_name_for_a_completed_championship(): void
+    {
+        $championship = Championship::factory()->create(['status' => ChampionshipStatus::Completed]);
+        Team::factory()->for($championship)->create([
+            'name' => 'Campeão FC',
+            'registration_order' => 1,
+            'final_position' => 1,
+        ]);
+        Team::factory()->for($championship)->create([
+            'name' => 'Vice FC',
+            'registration_order' => 2,
+            'final_position' => 2,
+        ]);
+
+        $response = $this->getJson(self::ENDPOINT);
+
+        $response->assertOk();
+        $response->assertJsonPath('data.0.champion', 'Campeão FC');
+    }
+
+    public function test_champion_is_null_when_there_is_no_champion_yet(): void
+    {
+        $championship = Championship::factory()->create(['status' => ChampionshipStatus::Pending]);
+        Team::factory()->for($championship)->create([
+            'name' => 'Sem Posição',
+            'registration_order' => 1,
+        ]);
+
+        $response = $this->getJson(self::ENDPOINT);
+
+        $response->assertOk();
+        $item = $response->json('data.0');
+        $this->assertArrayHasKey('champion', $item);
+        $this->assertNull($item['champion']);
+    }
+
     /**
      * @return Collection<int, Team>
      */
