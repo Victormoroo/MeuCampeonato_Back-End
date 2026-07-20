@@ -26,6 +26,8 @@ class ChampionshipResource extends JsonResource
             'updated_at' => $this->updated_at?->toIso8601String(),
             'teams_count' => $this->whenCounted('teams'),
             'games_count' => $this->whenCounted('games'),
+            // Nome do time campeão (final_position = 1); null se ainda não houver.
+            'champion' => $this->whenLoaded('champion', fn () => $this->champion->name),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
             'games' => GameResource::collection($this->whenLoaded('games')),
         ];

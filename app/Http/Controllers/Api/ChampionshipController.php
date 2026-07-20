@@ -21,6 +21,7 @@ class ChampionshipController extends Controller
     {
         $championships = Championship::query()
             ->withCount(['teams', 'games'])
+            ->with('champion')
             ->orderByDesc('id')
             ->paginate(15);
 

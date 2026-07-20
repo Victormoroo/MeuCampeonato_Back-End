@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['name', 'status', 'started_at', 'completed_at'])]
 class Championship extends Model
@@ -49,5 +50,16 @@ class Championship extends Model
     public function games(): HasMany
     {
         return $this->hasMany(Game::class);
+    }
+
+    /**
+     * O time campeão (final_position = 1), presente quando o campeonato foi
+     * concluído.
+     *
+     * @return HasOne<Team, $this>
+     */
+    public function champion(): HasOne
+    {
+        return $this->hasOne(Team::class)->where('final_position', 1);
     }
 }
