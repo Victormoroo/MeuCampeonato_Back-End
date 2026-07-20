@@ -53,4 +53,15 @@ class ChampionshipController extends Controller
 
         return ChampionshipResource::make($championship);
     }
+
+    /**
+     * Remove um campeonato. As foreign keys ON DELETE CASCADE de championship_id
+     * removem automaticamente os times e jogos associados.
+     */
+    public function destroy(Championship $championship): Response
+    {
+        $championship->delete();
+
+        return response()->noContent();
+    }
 }
